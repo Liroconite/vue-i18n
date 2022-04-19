@@ -1,17 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+        <div class="option">
+            <a href="#" @click="setLocale('fr')">Français</a>
+            <a href="#" @click="setLocale('ch')">Chinese</a>
+         </div>
+    <LoginPage :msg="$t('titre')"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoginPage from './components/login.vue'
 
 export default {
-  name: 'App',
+  name: 'app',
   components: {
-    HelloWorld
+    LoginPage
+  },
+  methods:{
+    setLocale(locale){
+      this.$i18n.locale = locale
+    }
   }
 }
 </script>
