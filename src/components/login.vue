@@ -19,7 +19,7 @@
             <button onclick ="function()"><a href="#">{{$t('compte')}}</a></button>
             <button onclick ="function()"><a href="#">{{$t('login')}}</a></button>
 	</div>
-    </div>
+  </div>
 </template>
 
 <script>
