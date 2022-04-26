@@ -1,39 +1,131 @@
 <template>
-    <div class="container">
+  <div class="container">
     <div class="left">
-		<div class="overlay">
-      <img src=".././assets/logo.png">
-		</div>
-	</div>
+      <div class="overlay">
+        <img src=".././assets/logo.png" />
+      </div>
+    </div>
     <div class="right">
-        <h4>{{ msg }}</h4>
-        <p>{{$t('LoginTxt')}}</p>
-            <div class="inputs">
-                <input type="email" placeholder="email"  required>
-                <br>
-                <input type="password" placeholder="password"  required>
-            </div>
-            <br>
-            <a href="#" class="mdp-design">{{$t('mdpo')}}</a>
-            <br><br>
-            <button onclick ="function()"><a href="#">{{$t('compte')}}</a></button>
-            <button onclick ="function()"><a href="#">{{$t('login')}}</a></button>
-	</div>
+      <h4>{{ msg }}</h4>
+      <p>{{ $t("LoginTxt") }}</p>
+      <el-form
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        ref="ruleForm"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <el-form
+          :model="ruleForm"
+          ref="ruleForm"
+          label-width="120px"
+          class="demo-dynamic"
+        >
+          <el-form-item
+            prop="email"
+            label="Email"
+            :rules="[
+              {
+                required: true,
+                message: 'Please input email address',
+                trigger: 'blur',
+              },
+              {
+                type: 'email',
+                message: 'Please input correct email address',
+                trigger: ['blur', 'change'],
+              },
+            ]"
+          >
+            <el-input v-model="ruleForm.email"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form-item label="password" prop="pass">
+          <el-input
+            type="password"
+            v-model="ruleForm.pass"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">
+            {{ $t("log") }}
+          </el-button>
+          <button onclick="function()">
+            <a href="/register">{{ $t("compte") }}</a>
+          </button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'LoginPage',
-  props: {
-    msg: String
-  }
-}
+import { postAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+export default {
+  name: "LoginPage",
+  props: {
+    msg: String,
+  },
+  data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("Veuillez entrer le mot de passe"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      ruleForm: {
+        email: "",
+        pass: "",
+      },
+      rules: {
+        pass: [{ validator: validatePass, trigger: "blur" }],
+      },
+    };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          await this.userLogin();
+          this.$notify({
+            title: "Success",
+            message: "This is a success message",
+            type: "success",
+          });
+        } else {
+          this.$notify.error({
+            title: "Error",
+            message: "This is an error message",
+          });
+          return false;
+        }
+      });
+    },
+  },
+  async userLogin() {
+    try {
+      const auth = postAuth();
+      const userCredential = signInWithEmailAndPassword(
+        auth,
+        this.ruleForm.email,
+        this.ruleForm.pass
+      );
+      const user = userCredential.user;
+      this.$router.replace({ name: "dashboarduser" });
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    }
+  },
+};
 </script>
 
 <style scoped>
-
 .container {
   margin: 0 auto;
   width: 80%;
@@ -44,15 +136,14 @@ export default {
   flex: 1 1 100%;
   align-items: center;
   justify-content: space-between;
-
 }
 
 .container div {
-    height: auto;
+  height: auto;
 }
 
 .container .left {
-  color: #FFFFFF;
+  color: #ffffff;
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -82,7 +173,7 @@ export default {
 }
 .container .right p {
   font-size: 14px;
-  color: #B0B3B9;
+  color: #b0b3b9;
 }
 .container .right .inputs {
   overflow: hidden;
@@ -92,14 +183,14 @@ export default {
   padding: 10px;
   margin-top: 25px;
   font-size: 16px;
-  border: 1px  solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   outline: none;
-  border-bottom: 1px  solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .container .right .mdp-design {
-    color: blue;
+  color: blue;
 }
 
 .container .right button {
