@@ -2,15 +2,17 @@ import LoginPage from './components/login.vue'
 import HelloPage from './components/HelloWorld.vue'
 import CreatePage from './components/Compte.vue'
 import DashboardUserPage from './components/dashboarduser.vue'
+import LayoutDefault from './layout/NavBarre.vue'
 
 export const routes = [
+
     {
         path: '/',
-        component: LoginPage
-    },
-    {
-        path: '/Register',
-        component: CreatePage
+        component: LayoutDefault,
+        children: [
+            { path: '/', component: LoginPage },
+            { path: '/register', component: CreatePage },
+        ]
     },
     {
         path: '/hello',

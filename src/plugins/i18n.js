@@ -19,7 +19,7 @@ const i18n = new VueI18n({
         },
         ch: {
             titre: '管理平台',
-            LoginTxt: '忘记密码1',
+            LoginTxt: '集中和管理您的合同，以优化您的消费。',
             mdpo: '忘记密码',
             compte: '创建账户',
             log: '登录',

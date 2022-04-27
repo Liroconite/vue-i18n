@@ -7,6 +7,7 @@
     </div>
     <div class="right">
       <h4>Crée un Compte</h4>
+      <p>Veuillez assurer que vous avez payé vos abonnements.</p>
       <el-form
         :model="ruleForm"
         status-icon
@@ -60,15 +61,13 @@
 
         <!-- button -->
         <el-form-item>
-          <el-button type="primary"
-            ><a href="/" target="_blank">Login</a></el-button
-          >
+          <router-link to="/" tag="button">Login</router-link>
           <el-button
             plain
             type="primary"
             class="btn btn-primary btn-lg btn-block"
             @click="submitForm('ruleForm')"
-            >Create Account</el-button
+            >Crée un Compte</el-button
           >
         </el-form-item>
       </el-form>
@@ -84,6 +83,9 @@ export default {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please input the password"));
+      }
+      if (value !== 6) {
+        callback(new Error("The password field must be at least 6 characters"));
       } else {
         if (this.ruleForm.checkPass !== "") {
           this.$refs.ruleForm.validateField("rulesForm");
@@ -222,13 +224,14 @@ export default {
 }
 
 .container .right button {
-  /* float: right; */
   color: #fff;
   font-size: 16px;
   padding: 12px 35px;
   border-radius: 50px;
   display: inline-block;
+  margin-right: 50px;
   border: 0;
+  cursor: pointer;
   outline: 0;
   box-shadow: 0px 4px 20px 0px #a876eaa6;
   background-image: linear-gradient(135deg, #bba3ee 10%, #b681d4 100%);

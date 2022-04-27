@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="right">
-      <h4>{{ msg }}</h4>
+      <h4>{{ $t("titre") }}</h4>
       <p>{{ $t("LoginTxt") }}</p>
       <el-form
         :model="ruleForm"
@@ -52,9 +52,9 @@
           <el-button type="primary" @click="submitForm('ruleForm')">
             {{ $t("log") }}
           </el-button>
-          <button onclick="function()">
-            <a href="/register">{{ $t("compte") }}</a>
-          </button>
+          <router-link to="/register" tag="button">
+            {{ $t("compte") }}
+          </router-link>
         </el-form-item>
       </el-form>
     </div>
@@ -62,13 +62,10 @@
 </template>
 
 <script>
-import { postAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default {
   name: "LoginPage",
-  props: {
-    msg: String,
-  },
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -91,7 +88,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          await this.userLogin();
+          await this.user();
           this.$notify({
             title: "Success",
             message: "This is a success message",
@@ -107,16 +104,16 @@ export default {
       });
     },
   },
-  async userLogin() {
+  async user() {
+    const auth = getAuth();
+    const userCredentl = signInWithEmailAndPassword(
+      auth,
+      this.ruleForm.email,
+      this.ruleForm.pass
+    );
+    const user = userCredentl.user;
     try {
-      const auth = postAuth();
-      const userCredential = signInWithEmailAndPassword(
-        auth,
-        this.ruleForm.email,
-        this.ruleForm.pass
-      );
-      const user = userCredential.user;
-      this.$router.replace({ name: "dashboarduser" });
+      this.$router.push("/dashboarduser");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -143,6 +140,7 @@ export default {
 }
 
 .container .left {
+  padding: 50px;
   color: #ffffff;
   background-size: cover;
   background-repeat: no-repeat;
@@ -152,15 +150,13 @@ export default {
   padding: 30px;
   width: 100%;
   height: 50%;
-  /* background: #5961f9ad;
-  overflow: hidden;
-  box-sizing: border-box; */
 }
 
 .container .right {
   padding: 50px;
   overflow: hidden;
   background-color: rgb(240, 240, 240);
+  display: block;
 }
 @media (max-width: 980px) {
   .container .right {
@@ -194,15 +190,18 @@ export default {
 }
 
 .container .right button {
-  /* float: right; */
   color: #fff;
   font-size: 16px;
   padding: 12px 35px;
   border-radius: 50px;
   display: inline-block;
+  margin-right: 50px;
+  cursor: pointer;
   border: 0;
   outline: 0;
   box-shadow: 0px 4px 20px 0px #a876eaa6;
   background-image: linear-gradient(135deg, #bba3ee 10%, #b681d4 100%);
 }
 </style>
+
+ 

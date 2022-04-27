@@ -6,6 +6,7 @@ import { router } from './router'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps } from "firebase/app";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,14 +22,15 @@ const firebaseConfig = {
   appId: "1:750475289760:web:081b8ce6c9a9a5747b95c5",
   measurementId: "G-0DBNF38DC0"
 };
-  let firebaseApp
-  const apps = getApps()
-  if (!apps.length) {
-        firebaseApp = initializeApp(firebaseConfig)
-    } else {
-        firebaseApp = apps[0]
-    }
-    Vue.prototype.$firebaseApp = firebaseApp
+let firebaseApp
+const apps = getApps()
+if (!apps.length) {
+  firebaseApp = initializeApp(firebaseConfig)
+} else {
+  firebaseApp = apps[0]
+}
+
+Vue.prototype.$firebaseApp = firebaseApp
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

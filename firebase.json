@@ -2,6 +2,12 @@
   "hosting": {
     "public": "dist",
     "site": "application-d86e0",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
