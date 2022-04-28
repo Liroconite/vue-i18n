@@ -80,7 +80,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please input the password"));
       }
@@ -93,7 +93,7 @@ export default {
         callback();
       }
     };
-    var validatePass2 = (rule, value, callback) => {
+    const validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please input the password again"));
       } else if (value !== this.ruleForm.pass) {
@@ -105,7 +105,11 @@ export default {
     return {
       ruleForm: {
         email: "",
-        pass: "",
+        pass: {
+          required: true,
+          min: 6,
+          max: 10,
+        },
         checkPass: "",
       },
       rules: {
