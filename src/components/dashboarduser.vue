@@ -7,8 +7,9 @@
       <el-upload
         class="upload-demo"
         drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        v-model="rulefile.upload"
+        action=""
+        :auto-upload="false"
+        v-model="rulefile.picture"
         multiple
       >
         <i class="el-icon-upload"></i>
@@ -23,7 +24,7 @@
         style="margin-left: 10px"
         size="small"
         type="success"
-        @click="submitUpload"
+        @click="onUpload('rulefile')"
         >Envoyer au serveur</el-button
       >
     </div>
@@ -63,8 +64,7 @@
   </div>
 </template>
 <script>
-import { getStorage, ref, listAll } from "firebase/storage";
-import * as firebase from "firebase/app";
+import { getStorage, storageRef, createStorage } from "firebase/storage";
 
 export default {
   data() {
@@ -76,19 +76,41 @@ export default {
         },
       ],
       rulefile: {
-        upload: "",
+        imageData: "",
+        picture: "",
       },
     };
   },
   methods: {
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
     handleEdit(index, row) {
       console.log(index, row);
     },
     handleDelete(index, row) {
       console.log(index, row);
+    },
+
+    // previewImage(event) {
+    //   this.rulefile.picture = null;
+    //   this.rulefile.imageData = event.target.file[0];
+    // },
+
+    async onUpload() {
+      this.rulefile.picture = null;
+      const storage = getStorage();
+      const storageRef = createStorage(
+        storage,
+        this.rulefile.imageData,
+        this.rulefile.picture
+      );
+
+      const useh = storageRef.useh;
+
+      try {
+        nonExistentFunction();
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      }
     },
   },
 };

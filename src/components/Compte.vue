@@ -107,8 +107,8 @@ export default {
         email: "",
         pass: {
           required: true,
-          min: 6,
-          max: 10,
+          minlenght: 6,
+          maxlenght: 10,
         },
         checkPass: "",
       },
