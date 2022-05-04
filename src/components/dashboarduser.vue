@@ -1,20 +1,21 @@
 <template>
   <div class="updiv">
-    <p>user dashboard</p>
-
     <!-- upload -->
-    <div class="uploadcontainer">
+    <div class="uploadcontainer" slot="file">
       <el-upload
-        class="upload-demo"
+        ref="upload"
+        class="mx-4 flex-grow"
         drag
-        action=""
+        action="https://"
+        :file-list="fileList"
+        :on-change="handleChanged"
+        :on-remove="handleRemoved"
         :auto-upload="false"
-        v-model="rulefile.picture"
-        multiple
+        :show-file-list="true"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          Déposer les fichiers ici ou<em>cliquez pour envoyer</em>
+          {{ $t("deposer") }}<em>{{ $t("cliquerici") }}</em>
         </div>
         <div class="el-upload__tip" slot="tip">
           Fichiers jpg/png avec une taille inférieure à 500kb
@@ -30,87 +31,92 @@
     </div>
 
     <!-- table -->
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column label="Date" width="180">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.date }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Nom" width="180">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>Nom: {{ scope.row.name }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.name }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="Opérations">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >Editer</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >Supprimer</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+    <h2>{{ $t("Vos_Fichier") }}</h2>
+    <template>
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column :label="$t('datetable')" width="180">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('docname')" width="180">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>{{ $t("docname") }}: {{ scope.row.title }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.title }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('operation')">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleChanged(scope.$index, scope.row)"
+              >{{ $t("editer") }}</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleRemoved(scope.$index, scope.row)"
+              >{{ $t("supression") }}</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
   </div>
 </template>
 <script>
-import { getStorage, storageRef, createStorage } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  QuerySnapshot,
+} from "firebase/firestore";
 
 export default {
   data() {
     return {
+      fileList: [],
       tableData: [
         {
           date: "",
           name: "",
         },
       ],
-      rulefile: {
-        imageData: "",
-        picture: "",
-      },
     };
   },
   methods: {
-    handleEdit(index, row) {
-      console.log(index, row);
+    handleChanged(file, fileList) {
+      this.selectedFiles = fileList.map((f) => f.raw);
+      console.log(file);
     },
-    handleDelete(index, row) {
-      console.log(index, row);
+    handleRemoved(file, fileList) {
+      this.selectedFiles = fileList.map((f) => f.raw);
     },
-
-    // previewImage(event) {
-    //   this.rulefile.picture = null;
-    //   this.rulefile.imageData = event.target.file[0];
-    // },
 
     async onUpload() {
-      this.rulefile.picture = null;
       const storage = getStorage();
-      const storageRef = createStorage(
-        storage,
-        this.rulefile.imageData,
-        this.rulefile.picture
-      );
-
-      const useh = storageRef.useh;
-
-      try {
-        nonExistentFunction();
-      } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      }
+      const db = getFirestore();
+      const storageRef = ref(storage, "user/image.jpg");
+      const file = this.selectedFiles[0];
+      const snapshot = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      const title = document.getElementById("file").files[0].name;
+      const current_timestamp = new Date().getTime();
+      const date = new Date(current_timestamp);
+      const docRef = await addDoc(collection(db, "factures"), {
+        title: title,
+        date: date,
+        url: url,
+      });
+      console.log(title);
+      console.log("Document written with ID: ", docRef.id);
+      console.log(url);
     },
   },
 };

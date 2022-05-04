@@ -83,8 +83,7 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please input the password"));
-      }
-      if (value !== 6) {
+      } else if (value.toString().lenght < 6 || value.toString().lenght > 10) {
         callback(new Error("The password field must be at least 6 characters"));
       } else {
         if (this.ruleForm.checkPass !== "") {
@@ -105,15 +104,19 @@ export default {
     return {
       ruleForm: {
         email: "",
-        pass: {
-          required: true,
-          minlenght: 6,
-          maxlenght: 10,
-        },
+        pass: "",
         checkPass: "",
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        pass: [
+          { validator: validatePass, trigger: "blur" },
+          {
+            min: 6,
+            max: 10,
+            message: "The password field must be at least 6 characters",
+            trigger: "blur",
+          },
+        ],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
@@ -133,17 +136,20 @@ export default {
             title: "Error",
             message: "This is an error message",
           });
+
           return false;
         }
       });
     },
     async userRegister() {
+      const email = error.email;
       const auth = getAuth();
       const userCredential = createUserWithEmailAndPassword(
         auth,
         this.ruleForm.email,
         this.ruleForm.pass
       );
+
       const user = userCredential.user;
 
       try {

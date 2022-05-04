@@ -88,7 +88,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          await this.user();
+          await this.userer();
           this.$notify({
             title: "Success",
             message: "This is a success message",
@@ -104,16 +104,17 @@ export default {
       });
     },
   },
-  async user() {
+  async userer() {
     const auth = getAuth();
-    const userCredentl = signInWithEmailAndPassword(
+    const userCredential = signInWithEmailAndPassword(
       auth,
       this.ruleForm.email,
       this.ruleForm.pass
     );
-    const user = userCredentl.user;
+    const user = userCredential.user;
+
     try {
-      this.$router.push("/dashboarduser");
+      nonExistentFunction();
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

@@ -12,14 +12,13 @@ export const routes = [
         children: [
             { path: '/', component: LoginPage },
             { path: '/register', component: CreatePage },
+            {
+                path: '/user', component: DashboardUserPage
+            }
         ]
     },
     {
         path: '/hello',
         component: HelloPage
     },
-    {
-        path: '/user',
-        component: DashboardUserPage
-    }
 ]

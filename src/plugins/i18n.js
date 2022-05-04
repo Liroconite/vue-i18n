@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
 
-
 const i18n = new VueI18n({
     locale: 'fr',
     fallbackLocale: 'ch',
@@ -15,7 +14,15 @@ const i18n = new VueI18n({
             compte: 'Crée un compte',
             log: 'Login',
             email: 'Email',
-            password: 'Mot de passe'
+            password: 'Mot de passe',
+            Vos_Fichier: 'Vos Documents',
+            datetable: 'Date',
+            docname: 'Nom',
+            editer: 'Editer',
+            supression: 'Delect',
+            operation: 'Operation',
+            deposer: 'Déposer les fichiers ici ou',
+            cliquerici: 'cliquez pour envoyer'
         },
         ch: {
             titre: '管理平台',
@@ -24,7 +31,15 @@ const i18n = new VueI18n({
             compte: '创建账户',
             log: '登录',
             email: '邮箱',
-            password: '密码'
+            password: '密码',
+            Vos_Fichier: '您的文档',
+            datetable: '日期',
+            docname: '文件名',
+            editer: '编辑',
+            supression: '删除',
+            operation: '操作',
+            deposer: '将文件拖放到此处或',
+            cliquerici: '点击发送',
         }
     }
 })
